@@ -9,7 +9,7 @@ class LoginController extends Controller {
     const fs = require('fs');
 
     let created = Math.floor(Date.now() / 1000);
-    let cert = fs.readFileSync(path.join(__dirname, '../../public/rsa_private_key.pem'));//私钥
+    let cert = fs.readFileSync(path.join(__dirname, '../public/rsa_private_key.pem'));//私钥
     let token = jwt.sign({
         data,
         exp: created + time
@@ -26,7 +26,13 @@ class LoginController extends Controller {
     let token = this.generateToken({_id: '123123123123'}, 60000);
 
     console.log(token+'===================='+password);
-    ctx.body = {success: 0, token: token};
+    ctx.body = {status: 200, token: token, msg: 'asdfasdfasdf'};
+    app.redis.set(username, token);
+    //ctx.status = 403
+  }
+  async getUserInfo() {
+    console.log('-----------------------------------------------------');
+    //ctx.body = {status: 200, token: token, msg: 'asdfasdfasdf'};
   }
 }
 

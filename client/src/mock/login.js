@@ -26,7 +26,6 @@ export const login = req => {
 }
 
 export const getUserInfo = req => {
-  alert(3);
   const params = getParams(req.url)
   return {
     code: 200,

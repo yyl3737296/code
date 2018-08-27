@@ -36,15 +36,10 @@ class httpRequest {
     // 添加响应拦截器
     instance.interceptors.response.use((res) => {
       let { data } = res
-      const is = this.destroy(url)
-      if (!is) {
-        setTimeout(() => {
-          // Spin.hide()
-        }, 500)
-      }
-      if (data.code !== 200) {
+      
+      if (data.status !== 200) {
         // 后端服务在个别情况下回报201，待确认
-        if (data.code === 401) {
+        if (data.status === 401) {
           Cookies.remove(TOKEN_KEY)
           window.location.href = window.location.pathname + '#/login'
           Message.error('未登录，或登录失效，请登录')

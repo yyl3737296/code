@@ -7,7 +7,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1534748414162_9826';
 
   // add your config here
-  config.middleware = [];
+  config.middleware = ['userInterceptor'];
 
   config.security = {
     csrf: {

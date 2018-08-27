@@ -36,8 +36,9 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
+          if (res) {
+            commit('setToken', res.token)
+          }
           resolve()
         }).catch(err => {
           reject(err)
