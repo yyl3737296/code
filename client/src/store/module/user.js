@@ -1,5 +1,7 @@
 import { login, logout, getUserInfo } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
+import Cookies from 'js-cookie'
+import config from '@/config'
 
 export default {
   state: {
@@ -38,8 +40,9 @@ export default {
         }).then(res => {
           if (res) {
             commit('setToken', res.token)
+            Cookies.set('username', userName, {expires: config.cookieExpires || 1})
           }
-          resolve()
+          resolve(res)
         }).catch(err => {
           reject(err)
         })
@@ -65,12 +68,14 @@ export default {
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(res => {
-          const data = res.data
-          commit('setAvator', data.avator)
-          commit('setUserName', data.user_name)
-          commit('setUserId', data.user_id)
-          commit('setAccess', data.access)
-          resolve(data)
+          if (res) {
+            const data = res.data
+            commit('setAvator', data.avator)
+            commit('setUserName', data.user_name)
+            commit('setUserId', data.user_id)
+            commit('setAccess', data.access)
+          }
+          resolve(res)
         }).catch(err => {
           reject(err)
         })

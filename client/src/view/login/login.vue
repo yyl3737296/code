@@ -29,12 +29,14 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          return;
-          this.$router.push({
-            name: 'home'
+        if (res) {
+          this.getUserInfo().then(res => {
+            return;
+            this.$router.push({
+              name: 'home'
+            })
           })
-        })
+        }
       })
     }
   }

@@ -17,7 +17,7 @@ class LoginController extends Controller {
     return token;
   }
   async login() {
-    const { ctx } = this;
+    const { ctx, app } = this;
 
     
 
@@ -25,13 +25,20 @@ class LoginController extends Controller {
     
     let token = this.generateToken({_id: '123123123123'}, 60000);
 
-    console.log(token+'===================='+password);
-    ctx.body = {status: 200, token: token, msg: 'asdfasdfasdf'};
-    app.redis.set(username, token);
+    ctx.body = {status: 200, token: token};
+    app.redis.set(userName, token);
     //ctx.status = 403
   }
   async getUserInfo() {
-    console.log('-----------------------------------------------------');
+    const { ctx, app } = this;
+    ctx.body = {status: 200, data: {
+      name: 'super_admin',
+      user_id: '1',
+      access: ['super_admin', 'admin'],
+      token: 'super_admin',
+      avator: 'https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png'
+    }};
+    
     //ctx.body = {status: 200, token: token, msg: 'asdfasdfasdf'};
   }
 }

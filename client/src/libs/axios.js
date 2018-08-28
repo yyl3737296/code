@@ -23,6 +23,7 @@ class httpRequest {
     // 添加请求拦截器
     instance.interceptors.request.use(config => {
       if (!config.url.includes('/users')) {
+        config.headers['username'] = Cookies.get('username')
         config.headers['x-access-token'] = Cookies.get(TOKEN_KEY)
       }
       // Spin.show()
@@ -42,9 +43,15 @@ class httpRequest {
         if (data.status === 401) {
           Cookies.remove(TOKEN_KEY)
           window.location.href = window.location.pathname + '#/login'
-          Message.error('未登录，或登录失效，请登录')
+          if (data.message) {
+            Message.error(data.message)
+          }
+          else {
+            Message.error('未登录，或登录失效，请登录')
+          }
+          
         } else {
-          if (data.msg) Message.error(data.msg)
+          if (data.message) Message.error(data.message)
         }
         return false
       }
