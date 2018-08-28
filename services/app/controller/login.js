@@ -41,6 +41,12 @@ class LoginController extends Controller {
     
     //ctx.body = {status: 200, token: token, msg: 'asdfasdfasdf'};
   }
+  async logout() {
+    const { ctx, app } = this;
+    let username = ctx.request.header['username']
+    app.redis.set(username, '');
+    ctx.body = {status: 200}
+  }
 }
 
 module.exports = LoginController;

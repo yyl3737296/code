@@ -31,7 +31,6 @@ export default {
       this.handleLogin({ userName, password }).then(res => {
         if (res) {
           this.getUserInfo().then(res => {
-            return;
             this.$router.push({
               name: 'home'
             })

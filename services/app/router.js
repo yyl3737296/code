@@ -7,6 +7,7 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
   router.post('/login', controller.login.login);
+  router.post('/logout', controller.login.logout);
 
   //const UserInterceptor = app.middleware.userInterceptor({}, app);
   //router.get('/userInfo', UserInterceptor, controller.login.getUserInfo);

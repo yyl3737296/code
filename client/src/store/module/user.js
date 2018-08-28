@@ -51,7 +51,7 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout().then(() => {
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
@@ -71,7 +71,7 @@ export default {
           if (res) {
             const data = res.data
             commit('setAvator', data.avator)
-            commit('setUserName', data.user_name)
+            commit('setUserName', data.name)
             commit('setUserId', data.user_id)
             commit('setAccess', data.access)
           }
