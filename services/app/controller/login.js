@@ -14,14 +14,18 @@ class LoginController extends Controller {
         data,
         exp: created + time
     }, cert, {algorithm: 'RS256'});
+
     return token;
   }
   async login() {
     const { ctx, app } = this;
-
-    
-
     const { userName, password } = ctx.request.body;
+
+    let userId = await ctx.service.loginSrvc.login(userName, password);
+    if (userId) {
+      console.log('==================================');
+    }
+    //console.log(userId);
     
     let token = this.generateToken({_id: '123123123123'}, 60000);
 
@@ -29,6 +33,7 @@ class LoginController extends Controller {
     app.redis.set(userName, token);
     //ctx.status = 403
   }
+
   async getUserInfo() {
     const { ctx, app } = this;
     ctx.body = {status: 200, data: {
@@ -38,9 +43,8 @@ class LoginController extends Controller {
       token: 'super_admin',
       avator: 'https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png'
     }};
-    
-    //ctx.body = {status: 200, token: token, msg: 'asdfasdfasdf'};
   }
+
   async logout() {
     const { ctx, app } = this;
     let username = ctx.request.header['username']

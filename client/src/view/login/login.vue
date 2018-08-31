@@ -16,8 +16,11 @@
 </template>
 
 <script>
-import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import LoginForm from '_c/login-form';
+import { mapActions } from 'vuex';
+import md5 from 'js-md5';
+import { Base64 } from 'js-base64';
+
 export default {
   components: {
     LoginForm
@@ -28,15 +31,16 @@ export default {
       'getUserInfo'
     ]),
     handleSubmit ({ userName, password }) {
+      password = md5(Base64.encode(password));
       this.handleLogin({ userName, password }).then(res => {
         if (res) {
           this.getUserInfo().then(res => {
             this.$router.push({
               name: 'home'
             })
-          })
+          });
         }
-      })
+      });
     }
   }
 }
