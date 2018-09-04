@@ -46,6 +46,7 @@
       <slot name="loading" slot="loading"></slot>
     </Table>
     <Page v-if="pageTotal > 0" @on-change="handlePage" @on-page-size-change="handlePageSize" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
+    <Spin size="large" fix v-if="loading"></Spin>
   </div>
 </template>
 
@@ -156,7 +157,8 @@ export default {
       searchKey: '',
       pageTotal: 0,
       pageNum: 1,
-      pageSize: 10
+      pageSize: 10,
+      loading: false
     }
   },
   methods: {
@@ -274,6 +276,7 @@ export default {
       this.ajaxData();
     },
     ajaxData() {
+      this.loading = true;
       axios.request({
         url: 'authorization',
         params: {
@@ -286,6 +289,7 @@ export default {
           this.insideTableData = res.data;
           this.pageTotal = res.total
         }
+        this.loading = false;
       })
 
     }

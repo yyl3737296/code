@@ -1,6 +1,7 @@
 <template>
   <div>
-    <tables ref="tables" stripe border searchable :buttons="buttons" :columns="columns"/>
+    <tables ref="tables" stripe border searchable :buttons="buttons" :columns="columns">
+    </tables>
   </div>
 </template>
 
