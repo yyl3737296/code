@@ -72,8 +72,7 @@ export default {
                             ]);
                         }
                     }
-                ],
-                tableData: []
+                ]
             }
         },
         methods: {

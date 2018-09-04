@@ -16,7 +16,7 @@
     </div>
     <Table
       ref="tablesMain"
-      :data="value"
+      :data="insideTableData"
       :columns="insideColumns"
       :stripe="stripe"
       :border="border"
@@ -45,7 +45,7 @@
       <slot name="footer" slot="footer"></slot>
       <slot name="loading" slot="loading"></slot>
     </Table>
-    <Page v-if="value.length > 0" @on-change="handlePage" @on-page-size-change="handlePageSize" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
+    <Page v-if="pageTotal > 0" @on-change="handlePage" @on-page-size-change="handlePageSize" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
   </div>
 </template>
 
@@ -153,7 +153,10 @@ export default {
       edittingCellId: '',
       edittingText: '',
       searchValue: '',
-      searchKey: ''
+      searchKey: '',
+      pageTotal: 0,
+      pageNum: 1,
+      pageSize: 10
     }
   },
   methods: {
@@ -262,13 +265,26 @@ export default {
     onExpand (row, status) {
       this.$emit('on-expand', row, status)
     },
+    handlePage(value) {
+      this.pageNum = value;
+      this.ajaxData();
+    },
+    handlePageSize(value) {
+      this.pageSize = value;
+      this.ajaxData();
+    },
     ajaxData() {
       axios.request({
         url: 'authorization',
-        method: 'get'
+        params: {
+          page: this.pageNum,
+          size: this.pageSize
+        },
+        method: 'get',
       }).then(res => {
         if (res.data) {
-          this.value = res.data;
+          this.insideTableData = res.data;
+          this.pageTotal = res.total
         }
       })
 

@@ -1,10 +1,17 @@
 const Service = require('egg').Service;
 class authorizationSrvc extends Service {
 
-  async get(username, password) {
+  async get(page, size) {
     const { app } = this;
-    const result = await app.mongo.find('User', {"query":{}, "project": {'password':0}});
+    let start = ( page - 1 ) * size;
+    const result = await app.mongo.find('User', {"query":{}, "limit":size, "skip": start, "sort": { index: -1 }, "project": {'password':0}});
     return result;
+  }
+
+  async getCount() {
+    const { app } = this;
+    const count = await app.mongo.count('User', {});
+    return count;
   }
 
 }
