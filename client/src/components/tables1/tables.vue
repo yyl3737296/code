@@ -1,22 +1,15 @@
 <template>
-  <div class="tabls-div">
-    <div class="tables-header">
-      <div class="tables-button">
-        <Button v-for="item in buttons" :type="item.type" :icon="item.icon||''">{{item.name}}</Button>
-      </div>
-      
-      <div v-if="searchable" class="tables-search search-con">
-        <Select v-model="searchKey" class="search-col">
-          <Option v-for="item in columns" v-if="item.key !== 'action'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
-        </Select>
-        <Input clearable placeholder="请输入关键字" style="width: 180px;">
-          <Icon type="ios-search" slot="suffix"/>
-        </Input>
-      </div>
+  <div>
+    <div v-if="searchable && searchPlace === 'top'" class="search-con search-con-top">
+      <Select v-model="searchKey" class="search-col">
+        <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+      </Select>
+      <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
+      <Button @click="handleSearch" class="search-btn" type="primary"><Icon type="search"/>&nbsp;&nbsp;搜索</Button>
     </div>
     <Table
       ref="tablesMain"
-      :data="value"
+      :data="insideTableData"
       :columns="insideColumns"
       :stripe="stripe"
       :border="border"
@@ -45,23 +38,25 @@
       <slot name="footer" slot="footer"></slot>
       <slot name="loading" slot="loading"></slot>
     </Table>
-    <Page v-if="value.length > 0" @on-change="handlePage" @on-page-size-change="handlePageSize" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
+    <div v-if="searchable && searchPlace === 'bottom'" class="search-con search-con-top">
+      <Select v-model="searchKey" class="search-col">
+        <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+      </Select>
+      <Input placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
+      <Button class="search-btn" type="primary"><Icon type="search"/>&nbsp;&nbsp;搜索</Button>
+    </div>
+    <a id="hrefToExportTable" style="display: none;width: 0px;height: 0px;"></a>
   </div>
 </template>
 
 <script>
-import './index.less';
-import axios from '@/libs/api.request';
+import TablesEdit from './edit.vue'
+import handleBtns from './handle-btns'
+import './index.less'
 export default {
   name: 'Tables',
   props: {
     value: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    buttons: {
       type: Array,
       default () {
         return []
@@ -211,7 +206,7 @@ export default {
       })
     },
     setDefaultSearchKey () {
-      this.searchKey = this.columns[0].key !== 'action' ? this.columns[0].key : (this.columns.length > 1 ? this.columns[1].key : '')
+      this.searchKey = this.columns[0].key !== 'handle' ? this.columns[0].key : (this.columns.length > 1 ? this.columns[1].key : '')
     },
     handleClear (e) {
       if (e.target.value === '') this.insideTableData = this.value
@@ -261,22 +256,11 @@ export default {
     },
     onExpand (row, status) {
       this.$emit('on-expand', row, status)
-    },
-    ajaxData() {
-      axios.request({
-        url: 'authorization',
-        method: 'get'
-      }).then(res => {
-        if (res.data) {
-          this.value = res.data;
-        }
-      })
-
     }
   },
   watch: {
     columns (columns) {
-      //this.handleColumns(columns)
+      this.handleColumns(columns)
       this.setDefaultSearchKey()
     },
     value (val) {
@@ -288,7 +272,6 @@ export default {
     this.handleColumns(this.columns)
     this.setDefaultSearchKey()
     this.handleTableData()
-    this.ajaxData();
   }
 }
 </script>

@@ -53,6 +53,25 @@ export default [
     }
   },
   {
+    path: '/authorization',
+    name: 'authorization',
+    meta: {
+      hide: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'authorization_page',
+        name: 'authorization_page',
+        meta: {
+          icon: 'ios-people',
+          title: '权限管理'
+        },
+        component: () => import('@/view/authorization/authorization.vue')
+      }
+    ]
+  },
+  {
     path: '/join',
     name: 'join',
     component: Main,

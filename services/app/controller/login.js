@@ -21,17 +21,16 @@ class LoginController extends Controller {
     const { ctx, app } = this;
     const { userName, password } = ctx.request.body;
 
-    let userId = await ctx.service.loginSrvc.login(userName, password);
-    if (userId) {
-      console.log('==================================');
+    let userInfo = await ctx.service.loginSrvc.login(userName, password);
+    if (userInfo.length > 0) {
+      let token = this.generateToken({_id: userInfo[0]._id}, 60000);
+      ctx.body = {status: 200, token: token};
+      app.redis.set(userName, token);
     }
-    //console.log(userId);
-    
-    let token = this.generateToken({_id: '123123123123'}, 60000);
+    else {
+      ctx.body = {status: 403, message: "用户名或密码错误！"};
+    }
 
-    ctx.body = {status: 200, token: token};
-    app.redis.set(userName, token);
-    //ctx.status = 403
   }
 
   async getUserInfo() {

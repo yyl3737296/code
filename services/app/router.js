@@ -5,13 +5,15 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.get('/', controller.home.index);
   router.post('/login', controller.login.login);
   router.post('/logout', controller.login.logout);
 
   //const UserInterceptor = app.middleware.userInterceptor({}, app);
   //router.get('/userInfo', UserInterceptor, controller.login.getUserInfo);
   router.get('/userInfo', controller.login.getUserInfo);
+
+  router.resources('posts', '/authorization', controller.authorization.authorization);
+  router.resources('post', '/authorization/:id', controller.authorization.authorization);
 
   //router.resources('user', '/api/user', controller.user.user);
 
