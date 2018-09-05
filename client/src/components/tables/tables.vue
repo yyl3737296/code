@@ -2,14 +2,14 @@
   <div class="tabls-div">
     <div class="tables-header">
       <div class="tables-button">
-        <Button v-for="item in buttons" :type="item.type" :icon="item.icon||''">{{item.name}}</Button>
+        <Button v-for="item in buttons" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
       </div>
       
       <div v-if="searchable" class="tables-search search-con">
         <Select v-model="searchKey" class="search-col">
           <Option v-for="item in columns" v-if="item.key !== 'action'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
         </Select>
-        <Input clearable placeholder="请输入关键字" style="width: 180px;">
+        <Input v-model="searchValue" clearable @on-enter="onSearchEnter()" placeholder="请输入关键字" style="width: 180px;">
           <Icon type="ios-search" slot="suffix"/>
         </Input>
       </div>
@@ -23,7 +23,6 @@
       :show-header="showHeader"
       :width="width"
       :height="height"
-      :loading="loading"
       :disabled-hover="disabledHover"
       :highlight-row="highlightRow"
       :row-class-name="rowClassName"
@@ -45,7 +44,7 @@
       <slot name="footer" slot="footer"></slot>
       <slot name="loading" slot="loading"></slot>
     </Table>
-    <Page v-if="pageTotal > 0" @on-change="handlePage" @on-page-size-change="handlePageSize" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
+    <Page v-if="insideTableData.length > 0" @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
     <Spin size="large" fix v-if="loading"></Spin>
   </div>
 </template>
@@ -74,6 +73,7 @@ export default {
         return []
       }
     },
+    url: String,
     size: String,
     width: {
       type: [Number, String]
@@ -115,10 +115,6 @@ export default {
     disabledHover: {
       type: Boolean
     },
-    loading: {
-      type: Boolean,
-      default: false
-    },
     /**
      * @description 全局设置是否可编辑
      */
@@ -158,7 +154,8 @@ export default {
       pageTotal: 0,
       pageNum: 1,
       pageSize: 10,
-      loading: false
+      loading: false,
+      searchValue: ''
     }
   },
   methods: {
@@ -267,29 +264,49 @@ export default {
     onExpand (row, status) {
       this.$emit('on-expand', row, status)
     },
-    handlePage(value) {
+    onPageNumChange(value) {
       this.pageNum = value;
       this.ajaxData();
     },
-    handlePageSize(value) {
+    onPageSizeChange(value) {
       this.pageSize = value;
       this.ajaxData();
     },
+    onSearchEnter() {
+      this.pageNum = 1;
+      this.ajaxData();
+    },
+    onButtonClick(item) {
+      if (item.handle) {
+        item.handle();
+      }
+    },
     ajaxData() {
       this.loading = true;
+
+      let params = {
+        page: this.pageNum,
+        size: this.pageSize
+      };
+
+      if (this.searchable) {
+        params.key = this.searchKey;
+        params.value = this.searchValue;
+      }
+
       axios.request({
-        url: 'authorization',
-        params: {
-          page: this.pageNum,
-          size: this.pageSize
-        },
+        url: this.url,
+        params: params,
         method: 'get',
       }).then(res => {
+        this.loading = false;
         if (res.data) {
           this.insideTableData = res.data;
           this.pageTotal = res.total
         }
-        this.loading = false;
+        else {
+          this.insideTableData = [];
+        }
       })
 
     }

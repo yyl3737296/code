@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tables ref="tables" stripe border searchable :buttons="buttons" :columns="columns">
+    <tables ref="tables" stripe border searchable :url="url" :buttons="buttons" :columns="columns">
     </tables>
   </div>
 </template>
@@ -14,75 +14,82 @@ export default {
   mounted() {
 
   },
-        data () {
-            return {
-              pageTotal: 0,
-              pageNum: 1,
-              pageSize: 10,
-                loading: true,
-                buttons: [{
-                  name: '新增',
-                  type: 'success',
-                  icon: 'md-add'
-                }],
-                columns: [
-                    {
-                        title: 'Name',
-                        key: 'name'
-                    },
-                    {
-                        title: 'Age',
-                        key: 'age'
-                    },
-                    {
-                        title: 'Address',
-                        key: 'address'
-                    },
-                    {
-                        title: ' ',
-                        key: 'action',
-                        width: 150,
+  data () {
+    return {
+      url: 'authorization',
+      buttons: [{
+        name: '新增',
+        type: 'success',
+        icon: 'md-add',
+        handle: () => {
+          alert(5);
+        }
+      },{
+        name: '新增',
+        type: 'success',
+        icon: 'md-add'
+      }],
+      columns: [
+      {
+                        type: 'index',
+                        width: 60,
                         align: 'center',
                         render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.show(params.index)
-                                        }
-                                    }
-                                }, 'View'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, 'Delete')
-                            ]);
+                          alert(h+'~~~~~~~~~'+params);
+                          return 1;
                         }
-                    }
-                ]
-            }
-        },
+                    },
+          {
+              title: 'Name',
+              key: 'name'
+          },
+          {
+              title: 'Age',
+              key: 'username'
+          },
+          {
+              title: 'Address',
+              key: 'tel'
+          },
+          {
+              title: ' ',
+              key: 'action',
+              width: 150,
+              align: 'center',
+              render: (h, params) => {
+                  return h('div', [
+                      h('Button', {
+                          props: {
+                              type: 'primary',
+                              size: 'small'
+                          },
+                          style: {
+                              marginRight: '5px'
+                          },
+                          on: {
+                              click: () => {
+                                  this.show(params.index)
+                              }
+                          }
+                      }, 'View'),
+                      h('Button', {
+                          props: {
+                              type: 'error',
+                              size: 'small'
+                          },
+                          on: {
+                              click: () => {
+                                  this.remove(params.index)
+                              }
+                          }
+                      }, 'Delete')
+                  ]);
+              }
+          }
+      ]
+    }
+  },
         methods: {
-          handlePage(value) {
-            alert(value);
-          },
-          handlePageSize(value) {
-            alert(value);
-          },
             show (index) {
                 this.$Modal.info({
                     title: 'User Info',

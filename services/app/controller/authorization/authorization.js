@@ -4,9 +4,13 @@ const Controller = require('egg').Controller;
 class AuthController extends Controller {
   async index() {
     const { ctx } = this;
-    const { page, size } = ctx.query;
-    let data = await ctx.service.authorization.authorizationSrvc.get(page, size);
-    let total = await ctx.service.authorization.authorizationSrvc.getCount();
+    const { page, size, key, value } = ctx.query;
+    let query = {};
+    if ( value && key && key != '' && value != ' ') {
+      query[key] = new RegExp(value);
+    }
+    let data = await ctx.service.authorization.authorizationSrvc.get(page, size, query);
+    let total = await ctx.service.authorization.authorizationSrvc.getCount(query);
     this.ctx.body = {status: 200, data: data, total: total};
   }
   async create() {

@@ -59,7 +59,7 @@ class httpRequest {
     }, (error) => {
       Message.error('服务内部错误')
       // 对响应错误做点什么
-      return Promise.reject(error)
+      return Promise.resolve(error)
     })
   }
   // 创建实例
