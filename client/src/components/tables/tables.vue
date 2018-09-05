@@ -2,9 +2,9 @@
   <div class="tabls-div">
     <div class="tables-header">
       <div class="tables-button">
-        <Button v-for="item in buttons" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
+        <Button v-for="item in buttons" :key="item" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
       </div>
-      
+
       <div v-if="searchable" class="tables-search search-con">
         <Select v-model="searchKey" class="search-col">
           <Option v-for="item in columns" v-if="item.key !== 'action'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import './index.less';
-import axios from '@/libs/api.request';
+import './index.less'
+import axios from '@/libs/api.request'
 export default {
   name: 'Tables',
   props: {
@@ -154,43 +154,10 @@ export default {
       pageTotal: 0,
       pageNum: 1,
       pageSize: 10,
-      loading: false,
-      searchValue: ''
+      loading: false
     }
   },
   methods: {
-    suportEdit (item, index) {
-      item.render = (h, params) => {
-        return h(TablesEdit, {
-          props: {
-            params: params,
-            value: this.insideTableData[params.index][params.column.key],
-            edittingCellId: this.edittingCellId,
-            editable: this.editable
-          },
-          on: {
-            'input': val => {
-              this.edittingText = val
-            },
-            'on-start-edit': (params) => {
-              this.edittingCellId = `editting-${params.index}-${params.column.key}`
-              this.$emit('on-start-edit', params)
-            },
-            'on-cancel-edit': (params) => {
-              this.edittingCellId = ''
-              this.$emit('on-cancel-edit', params)
-            },
-            'on-save-edit': (params) => {
-              this.value[params.row.initRowIndex][params.column.key] = this.edittingText
-              this.$emit('input', this.value)
-              this.$emit('on-save-edit', Object.assign(params, {value: this.edittingText}))
-              this.edittingCellId = ''
-            }
-          }
-        })
-      }
-      return item
-    },
     surportHandle (item) {
       let options = item.options || []
       let insideBtns = []
@@ -207,32 +174,25 @@ export default {
     handleColumns (columns) {
       this.insideColumns = columns.map((item, index) => {
         let res = item
-        if (res.editable) res = this.suportEdit(res, index)
-        if (res.key === 'handle') res = this.surportHandle(res)
+        // if (res.key === 'handle') res = this.surportHandle(res)
+        if (res.type === 'index') {
+          res.indexMethod = (row) => {
+            return row._index + (this.pageNum - 1) * this.pageSize + 1
+          }
+        }
         return res
       })
     },
     setDefaultSearchKey () {
-      this.searchKey = this.columns[0].key !== 'action' ? this.columns[0].key : (this.columns.length > 1 ? this.columns[1].key : '')
-    },
-    handleClear (e) {
-      if (e.target.value === '') this.insideTableData = this.value
-    },
-    handleSearch () {
-      this.insideTableData = this.value.filter(item => item[this.searchKey].indexOf(this.searchValue) > -1)
-    },
-    handleTableData () {
-      this.insideTableData = this.value.map((item, index) => {
-        let res = item
-        res.initRowIndex = index
-        return res
-      })
+      for (let i = 0; i < this.columns.length; i++) {
+        if (this.columns[i].key !== 'action') {
+          this.searchKey = this.columns[i].key
+          break
+        }
+      }
     },
     exportCsv (params) {
       this.$refs.tablesMain.exportCsv(params)
-    },
-    clearCurrentRow () {
-      this.$refs.talbesMain.clearCurrentRow()
     },
     onCurrentChange (currentRow, oldCurrentRow) {
       this.$emit('on-current-change', currentRow, oldCurrentRow)
@@ -264,66 +224,58 @@ export default {
     onExpand (row, status) {
       this.$emit('on-expand', row, status)
     },
-    onPageNumChange(value) {
-      this.pageNum = value;
-      this.ajaxData();
+    onPageNumChange (value) {
+      this.pageNum = value
+      this.ajaxData()
     },
-    onPageSizeChange(value) {
-      this.pageSize = value;
-      this.ajaxData();
+    onPageSizeChange (value) {
+      this.pageSize = value
+      this.ajaxData()
     },
-    onSearchEnter() {
-      this.pageNum = 1;
-      this.ajaxData();
+    onSearchEnter () {
+      this.pageNum = 1
+      this.ajaxData()
     },
-    onButtonClick(item) {
+    onButtonClick (item) {
       if (item.handle) {
-        item.handle();
+        item.handle()
       }
     },
-    ajaxData() {
-      this.loading = true;
+    ajaxData () {
+      this.loading = true
 
       let params = {
         page: this.pageNum,
         size: this.pageSize
-      };
+      }
 
       if (this.searchable) {
-        params.key = this.searchKey;
-        params.value = this.searchValue;
+        params.key = this.searchKey
+        params.value = this.searchValue
       }
 
       axios.request({
         url: this.url,
         params: params,
-        method: 'get',
+        method: 'get'
       }).then(res => {
-        this.loading = false;
-        this.insideTableData = res.data;
+        this.loading = false
+        this.insideTableData = res.data
         this.pageTotal = res.total
       }).catch(err => {
-        this.loading = false;
-        this.insideTableData = [];
+        if (err) {
+          this.loading = false
+          this.insideTableData = []
+        }
       })
-
-    }
-  },
-  watch: {
-    columns (columns) {
-      //this.handleColumns(columns)
-      this.setDefaultSearchKey()
-    },
-    value (val) {
-      this.handleTableData()
-      this.handleSearch()
     }
   },
   mounted () {
     this.handleColumns(this.columns)
-    this.setDefaultSearchKey()
-    this.handleTableData()
-    this.ajaxData();
+    this.ajaxData()
+    if (this.searchable) {
+      this.setDefaultSearchKey()
+    }
   }
 }
 </script>
