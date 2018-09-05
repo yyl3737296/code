@@ -300,13 +300,11 @@ export default {
         method: 'get',
       }).then(res => {
         this.loading = false;
-        if (res.data) {
-          this.insideTableData = res.data;
-          this.pageTotal = res.total
-        }
-        else {
-          this.insideTableData = [];
-        }
+        this.insideTableData = res.data;
+        this.pageTotal = res.total
+      }).catch(err => {
+        this.loading = false;
+        this.insideTableData = [];
       })
 
     }
