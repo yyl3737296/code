@@ -1,15 +1,16 @@
 <template>
   <div class="tabls-div">
+    <div v-if="loading" class="page-shade"></div>
     <div class="tables-header">
       <div class="tables-button">
         <Button v-for="(item, index) in buttons" :key="`tables-button-${index}`" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
       </div>
 
       <div v-if="searchable && isShowSearchInput" class="tables-search search-con">
-        <Select :disabled="loading" v-model="searchKey" class="search-col">
+        <Select v-model="searchKey" class="search-col">
           <Option v-for="item in columns" v-if="item.key !== 'action'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
         </Select>
-        <Input v-model="searchValue" :disabled="loading" clearable @on-enter="onSearchEnter()" placeholder="请输入关键字" style="width: 180px;">
+        <Input v-model="searchValue" clearable @on-enter="onSearchEnter()" placeholder="请输入关键字" style="width: 180px;">
           <Icon type="ios-search" slot="suffix"/>
         </Input>
       </div>
@@ -46,7 +47,6 @@
       <slot name="loading" slot="loading"></slot>
     </Table>
     <div class="table-page" v-if="insideTableData.length > 0">
-      <div v-if="loading" class="page-shade" style="position:absolute;width:100%;height:100%;red;"></div>
       <Page @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
     </div>
     <!--<Spin size="large" fix v-if="loading"></Spin>-->
