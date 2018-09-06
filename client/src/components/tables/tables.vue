@@ -2,7 +2,7 @@
   <div class="tabls-div">
     <div class="tables-header">
       <div class="tables-button">
-        <Button v-for="item in buttons" :key="item" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
+        <Button v-for="(item, index) in buttons" :key="`tables-button-${index}`" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
       </div>
 
       <div v-if="searchable" class="tables-search search-con">
@@ -16,6 +16,7 @@
     </div>
     <Table
       ref="tablesMain"
+      :loading="loading"
       :data="insideTableData"
       :columns="insideColumns"
       :stripe="stripe"
@@ -44,7 +45,9 @@
       <slot name="footer" slot="footer"></slot>
       <slot name="loading" slot="loading"></slot>
     </Table>
-    <Page v-if="insideTableData.length > 0" @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
+    <div class="table-page" v-if="insideTableData.length > 0">
+      <Page @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :total="pageTotal" show-total show-elevator show-sizer />
+    </div>
     <Spin size="large" fix v-if="loading"></Spin>
   </div>
 </template>
