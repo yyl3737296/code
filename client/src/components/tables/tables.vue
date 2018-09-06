@@ -5,7 +5,7 @@
         <Button v-for="(item, index) in buttons" :key="`tables-button-${index}`" :type="item.type" :icon="item.icon||''" @click="onButtonClick(item);">{{item.name}}</Button>
       </div>
 
-      <div v-if="searchable" class="tables-search search-con">
+      <div v-if="searchable && isShowSearchInput" class="tables-search search-con">
         <Select v-model="searchKey" class="search-col">
           <Option v-for="item in columns" v-if="item.key !== 'action'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
         </Select>
@@ -46,9 +46,9 @@
       <slot name="loading" slot="loading"></slot>
     </Table>
     <div class="table-page" v-if="insideTableData.length > 0">
-      <Page @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :total="pageTotal" show-total show-elevator show-sizer />
+      <Page @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
     </div>
-    <Spin size="large" fix v-if="loading"></Spin>
+    <!--<Spin size="large" fix v-if="loading"></Spin>-->
   </div>
 </template>
 
@@ -152,12 +152,14 @@ export default {
       insideTableData: [],
       edittingCellId: '',
       edittingText: '',
+      isShowSearchInput: false,
       searchValue: '',
       searchKey: '',
       pageTotal: 0,
       pageNum: 1,
       pageSize: 10,
-      loading: false
+      loading: false,
+      currentPageNum: 1
     }
   },
   methods: {
@@ -180,7 +182,7 @@ export default {
         // if (res.key === 'handle') res = this.surportHandle(res)
         if (res.type === 'index') {
           res.indexMethod = (row) => {
-            return row._index + (this.pageNum - 1) * this.pageSize + 1
+            return row._index + (this.currentPageNum - 1) * this.pageSize + 1
           }
         }
         return res
@@ -236,12 +238,24 @@ export default {
       this.ajaxData()
     },
     onSearchEnter () {
-      this.pageNum = 1
-      this.ajaxData()
+      this.pageNum = 1;
+      this.currentPageNum = 1;
+      this.ajaxData();
     },
     onButtonClick (item) {
       if (item.handle) {
         item.handle()
+      }
+    },
+    /*用于判断是否显示search框，当设置searchable：true的时候，如果当前没有数据（未搜索前）及异常的情况不显示搜索框*/
+    showSearchInput () {
+      if (this.searchable) {
+        if (this.insideTableData.length == 0&&this.searchValue == '') {
+          this.isShowSearchInput = false;
+        }
+        else {
+          this.isShowSearchInput = true;
+        }
       }
     },
     ajaxData () {
@@ -263,8 +277,16 @@ export default {
         method: 'get'
       }).then(res => {
         this.loading = false
-        this.insideTableData = res.data
-        this.pageTotal = res.total
+        if (res) {
+          this.insideTableData = res.data;
+          this.pageTotal = res.total;
+          this.currentPageNum = this.pageNum;
+        }
+        else {
+          this.insideTableData = [];
+        }
+        this.showSearchInput();
+        
       }).catch(err => {
         if (err) {
           this.loading = false
