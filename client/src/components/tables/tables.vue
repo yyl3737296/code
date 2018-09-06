@@ -6,10 +6,10 @@
       </div>
 
       <div v-if="searchable && isShowSearchInput" class="tables-search search-con">
-        <Select v-model="searchKey" class="search-col">
+        <Select :disabled="loading" v-model="searchKey" class="search-col">
           <Option v-for="item in columns" v-if="item.key !== 'action'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
         </Select>
-        <Input v-model="searchValue" clearable @on-enter="onSearchEnter()" placeholder="请输入关键字" style="width: 180px;">
+        <Input v-model="searchValue" :disabled="loading" clearable @on-enter="onSearchEnter()" placeholder="请输入关键字" style="width: 180px;">
           <Icon type="ios-search" slot="suffix"/>
         </Input>
       </div>
@@ -46,6 +46,7 @@
       <slot name="loading" slot="loading"></slot>
     </Table>
     <div class="table-page" v-if="insideTableData.length > 0">
+      <div v-if="loading" class="page-shade" style="position:absolute;width:100%;height:100%;red;"></div>
       <Page @on-change="onPageNumChange" @on-page-size-change="onPageSizeChange" :current="pageNum" :total="pageTotal" :page-size="pageSize" show-total show-elevator show-sizer />
     </div>
     <!--<Spin size="large" fix v-if="loading"></Spin>-->
@@ -238,23 +239,22 @@ export default {
       this.ajaxData()
     },
     onSearchEnter () {
-      this.pageNum = 1;
-      this.currentPageNum = 1;
-      this.ajaxData();
+      this.pageNum = 1
+      this.currentPageNum = 1
+      this.ajaxData()
     },
     onButtonClick (item) {
       if (item.handle) {
         item.handle()
       }
     },
-    /*用于判断是否显示search框，当设置searchable：true的时候，如果当前没有数据（未搜索前）及异常的情况不显示搜索框*/
+    /* 用于判断是否显示search框，当设置searchable：true的时候，如果当前没有数据（未搜索前）及异常的情况不显示搜索框 */
     showSearchInput () {
       if (this.searchable) {
-        if (this.insideTableData.length == 0&&this.searchValue == '') {
-          this.isShowSearchInput = false;
-        }
-        else {
-          this.isShowSearchInput = true;
+        if (this.insideTableData.length === 0 && this.searchValue === '') {
+          this.isShowSearchInput = false
+        } else {
+          this.isShowSearchInput = true
         }
       }
     },
@@ -278,15 +278,13 @@ export default {
       }).then(res => {
         this.loading = false
         if (res) {
-          this.insideTableData = res.data;
-          this.pageTotal = res.total;
-          this.currentPageNum = this.pageNum;
+          this.insideTableData = res.data
+          this.pageTotal = res.total
+          this.currentPageNum = this.pageNum
+        } else {
+          this.insideTableData = []
         }
-        else {
-          this.insideTableData = [];
-        }
-        this.showSearchInput();
-        
+        this.showSearchInput()
       }).catch(err => {
         if (err) {
           this.loading = false

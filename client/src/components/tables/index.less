@@ -31,11 +31,21 @@
     }
   }
   .table-page {
+    position: relative;
     margin-top: 15px;
     margin-right: 10px;
     overflow: hidden;
     .ivu-page {
       float: right;
+    }
+    .page-shade {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 1;
+      opacity: 0;
+      cursor: not-allowed;
     }
   }
 }
