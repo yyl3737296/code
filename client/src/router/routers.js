@@ -53,6 +53,25 @@ export default [
     }
   },
   {
+    path: '/organize',
+    name: 'organize',
+    meta: {
+      hide: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'organize_page',
+        name: 'organize_page',
+        meta: {
+          icon: 'ios-people',
+          title: '组织管理'
+        },
+        component: () => import('@/view/organize/organize.vue')
+      }
+    ]
+  },
+  {
     path: '/authorization',
     name: 'authorization',
     meta: {

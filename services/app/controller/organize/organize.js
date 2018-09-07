@@ -11,8 +11,8 @@ class AuthController extends Controller {
       query[key] = new RegExp(value);
     }
 
-    let data = await ctx.service.authorization.authorizationSrvc.get(page, size, query);
-    let total = await ctx.service.authorization.authorizationSrvc.getCount(query);
+    let data = await ctx.service.organize.organizeSrvc.get(page, size, query);
+    let total = await ctx.service.organize.organizeSrvc.getCount(query);
 
     ctx.body = {status: 200, data: data, total: total};
     

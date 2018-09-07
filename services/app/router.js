@@ -12,8 +12,8 @@ module.exports = app => {
   //router.get('/userInfo', UserInterceptor, controller.login.getUserInfo);
   router.get('/userInfo', controller.login.getUserInfo);
 
-  router.resources('posts', '/authorization', controller.authorization.authorization);
-  router.resources('post', '/authorization/:id', controller.authorization.authorization);
+  router.resources('posts', '/organize', controller.organize.organize);
+  router.resources('post', '/organize/:id', controller.organize.organize);
 
   //router.resources('user', '/api/user', controller.user.user);
 

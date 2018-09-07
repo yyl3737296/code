@@ -1,40 +1,34 @@
 <template>
   <div>
-    <Modal
-        v-model="modal1"
-        title="Common Modal dialog box title"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <p>Content of dialog</p>
-        <p>Content of dialog</p>
-        <p>Content of dialog</p>
+    <Modal v-model="addModal" title="Common Modal dialog box title">
+      <OrganizeAdd :addModal="addModal"></OrganizeAdd>
     </Modal>
-    <tables ref="tables" stripe border searchable :url="url" :buttons="buttons" :columns="columns">
-    </tables>
+    <Tables ref="tables" stripe border searchable :url="url" :buttons="buttons" :columns="columns">
+    </Tables>
   </div>
 </template>
 
 <script>
 import Tables from '_c/tables'
-import AddModal from './authorizationAdd'
+import OrganizeAdd from './organizeAdd'
 export default {
   components: {
     Tables,
-    AddModal
+    OrganizeAdd
   },
   mounted() {
 
   },
   data () {
     return {
-      modal1: false,
-      url: 'authorization',
+      addModal: false,
+      url: 'organize',
       buttons: [{
         name: '新增',
         type: 'success',
         icon: 'md-add',
         handle: () => {
-          this.modal1 = true;
+          this.addModal = true;
         }
       },{
         name: '新增',

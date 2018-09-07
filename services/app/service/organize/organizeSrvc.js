@@ -1,5 +1,5 @@
 const Service = require('egg').Service;
-class authorizationSrvc extends Service {
+class organizeSrvc extends Service {
 
   async get(page, size, query) {
     const { app } = this;
@@ -15,4 +15,4 @@ class authorizationSrvc extends Service {
   }
 
 }
-module.exports = authorizationSrvc;
+module.exports = organizeSrvc;
