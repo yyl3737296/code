@@ -23,7 +23,7 @@ class LoginController extends Controller {
 
     let userInfo = await ctx.service.loginSrvc.login(userName, password);
     if (userInfo.length > 0) {
-      let token = this.generateToken({_id: userInfo[0]._id}, 60000);
+      let token = this.generateToken({_id: userInfo[0]._id}, 36000);
       ctx.body = {status: 200, token: token};
       app.redis.set(userName, token);
     }

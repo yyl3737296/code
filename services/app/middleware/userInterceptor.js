@@ -42,7 +42,7 @@ module.exports = (options, app) => {
             // 如果token为空，则代表客户没有登录
             ctx.body = {
                 status: 401,
-                message: '您还没有登录，请登陆后再进行操作'
+                message: '您还没有登录，请登录后再进行操作'
             }
         }
     };

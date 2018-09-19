@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Modal v-model="addModal" title="Common Modal dialog box title">
-      <OrganizeAdd :addModal="addModal"></OrganizeAdd>
-    </Modal>
+    <OrganizeAdd ref="add"></OrganizeAdd>
     <Tables ref="tables" stripe border searchable :url="url" :buttons="buttons" :columns="columns">
     </Tables>
   </div>
@@ -21,19 +19,14 @@ export default {
   },
   data () {
     return {
-      addModal: false,
       url: 'organize',
       buttons: [{
         name: '新增',
         type: 'success',
         icon: 'md-add',
         handle: () => {
-          this.addModal = true;
+          this.$refs.add.show();
         }
-      },{
-        name: '新增',
-        type: 'success',
-        icon: 'md-add'
       }],
       columns: [{
         type: 'index',
@@ -89,16 +82,16 @@ export default {
       ]
     }
   },
-        methods: {
-            show (index) {
-                this.$Modal.info({
-                    title: 'User Info',
-                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-                })
-            },
-            remove (index) {
-                this.data6.splice(index, 1);
-            }
-        },
-    }
+  methods: {
+      show (index) {
+          this.$Modal.info({
+              title: 'User Info',
+              content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+          })
+      },
+      remove (index) {
+          this.data6.splice(index, 1);
+      }
+  }
+}
 </script>
