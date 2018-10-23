@@ -8,7 +8,7 @@
         <FormItem label="组织名称" prop="organize">
             <Input v-model="formInline.organize"></Input>
         </FormItem>
-        <FormItem label="用户名" prop="user">
+        <FormItem label="组织登录名" prop="user">
             <Input v-model="formInline.user"></Input>
         </FormItem>
         <FormItem label="密码" prop="password">
@@ -24,6 +24,7 @@
   </Modal>
 </template>
 <script>
+import { add } from '@/api/organize'
 export default {
   name: 'OrganizeAdd',
   data() {
@@ -50,7 +51,7 @@ export default {
           { required: true, message: '组织名称不能为空', trigger: 'blur' }
         ],
         user: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' }
+          { required: true, message: '组织登录不能为空', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
@@ -71,6 +72,15 @@ export default {
     asyncOK() {
       this.$refs.formInline.validate((valid) => {
           if (valid) {
+            add({
+              'asdfasdf':'asdfasdf',
+              'asdfasdfasdf':'asdfasdf'
+            }).then(res => {
+            if (res) {
+              
+            }
+          }).catch(err => {
+          })
           } else {
               this.loading = false;
               setTimeout(() => {

@@ -13,7 +13,7 @@ module.exports = app => {
   router.get('/userInfo', controller.login.getUserInfo);
 
   router.resources('posts', '/organize', controller.organize.organize);
-  router.resources('post', '/organize/:id', controller.organize.organize);
+  router.resources('post', '/organize', controller.organize.organize);
 
   //router.resources('user', '/api/user', controller.user.user);
 
