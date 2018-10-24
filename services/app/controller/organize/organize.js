@@ -19,10 +19,12 @@ class AuthController extends Controller {
   }
   async create() {
     const { ctx } = this;
-    let query = {'userName':'123123'};
+    const { user } = ctx.request.body;
+    let query = {'user':user};
     let total = await ctx.service.organize.organizeSrvc.getCount(query);
-    if (total > 0) {
-
+    if (total == 0) {
+      let req = await ctx.service.organize.organizeSrvc.set(ctx.request.body);
+      this.ctx.body = {status: 200};
     }
     else {
       this.ctx.body = {status: 403, message: "组织登录名已经存在！"};

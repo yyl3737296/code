@@ -17,14 +17,17 @@
         <FormItem label="确认密码" prop="password2">
             <Input type="password" v-model="formInline.password2"></Input>
         </FormItem>
-        <FormItem label="描述">
-            <Input></Input>
+        <FormItem label="描述" prop="description">
+            <Input v-model="formInline.description"></Input>
         </FormItem>
     </Form>
   </Modal>
 </template>
 <script>
-import { add } from '@/api/organize'
+import { add } from '@/api/organize';
+import md5 from 'js-md5';
+import { Base64 } from 'js-base64';
+
 export default {
   name: 'OrganizeAdd',
   data() {
@@ -44,7 +47,8 @@ export default {
         user:'',
         organize: '',
         password:'',
-        password2:''
+        password2:'',
+        description:''
       },
       ruleInline: {
         organize: [
@@ -58,7 +62,10 @@ export default {
         ],
         password2: [
           { required: true, validator: validatePassCheck, trigger: 'blur' }
-        ]
+        ],
+        description: [{
+          max: 128, trigger: 'blur'
+        }]
       }
     }
   },
@@ -69,23 +76,34 @@ export default {
       this.$refs.formInline.resetFields();
       this.modal = true;
     },
+    removeLoading() {
+      this.loading = false;
+      setTimeout(() => {
+          this.loading = true;
+      });
+    },
     asyncOK() {
       this.$refs.formInline.validate((valid) => {
           if (valid) {
+            let password = md5(Base64.encode(this.formInline.password));
             add({
-              'asdfasdf':'asdfasdf',
-              'asdfasdfasdf':'asdfasdf'
+              organize: this.formInline.organize,
+              user: this.formInline.user,
+              password: password,
+              description: this.formInline.description,
             }).then(res => {
-            if (res) {
-              
-            }
-          }).catch(err => {
-          })
+              if (res) {
+                this.modal = false;
+                this.$emit('refreshTable');
+              }
+              else {
+                this.removeLoading();
+              }
+            }).catch(err => {
+              this.removeLoading();
+            })
           } else {
-              this.loading = false;
-              setTimeout(() => {
-                  this.loading = true;
-              });
+            this.removeLoading();
           }
       });
     }

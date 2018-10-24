@@ -1,10 +1,6 @@
 import axios from '@/libs/api.request'
 
-export const add = ({ userName, password }) => {
-  const data = {
-    userName,
-    password
-  }
+export const add = (data) => {
   return axios.request({
     url: 'organize',
     data,

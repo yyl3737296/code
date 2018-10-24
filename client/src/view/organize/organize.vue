@@ -1,6 +1,6 @@
 <template>
   <div>
-    <OrganizeAdd ref="add"></OrganizeAdd>
+    <OrganizeAdd ref="add" @refreshTable="refreshTable"></OrganizeAdd>
     <Tables ref="tables" stripe border searchable :url="url" :buttons="buttons" :columns="columns">
     </Tables>
   </div>
@@ -84,13 +84,16 @@ export default {
   },
   methods: {
       show (index) {
-          this.$Modal.info({
-              title: 'User Info',
-              content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-          })
+        this.$Modal.info({
+          title: 'User Info',
+          content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+        })
       },
       remove (index) {
-          this.data6.splice(index, 1);
+        this.data6.splice(index, 1);
+      },
+      refreshTable () {
+        this.$refs.tables.refresh();
       }
   }
 }

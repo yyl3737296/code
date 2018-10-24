@@ -197,6 +197,9 @@ export default {
         }
       }
     },
+    refresh() {
+      this.ajaxData();
+    },
     exportCsv (params) {
       this.$refs.tablesMain.exportCsv(params)
     },
