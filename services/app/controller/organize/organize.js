@@ -19,17 +19,28 @@ class AuthController extends Controller {
   }
   async create() {
     const { ctx } = this;
-    const { user } = ctx.request.body;
-    let query = {'user':user};
-    let total = await ctx.service.organize.organizeSrvc.getCount(query);
+    const { user, password, organize, description } = ctx.request.body;
+    let query = {'username':user};
+    let total = await ctx.service.utilSrvc.getCount('User', query);
+
     if (total == 0) {
-      let req = await ctx.service.organize.organizeSrvc.set(ctx.request.body);
+      let req = await ctx.service.utilSrvc.insertOne('Organize', {
+        organize: organize,
+        description: description
+      });
+
+      await ctx.service.utilSrvc.insertOne('User', {
+        username: user,
+        password: password,
+        orgId: req.insertedId,
+        role: 'super_admin_company'
+      });
+
       this.ctx.body = {status: 200};
     }
     else {
       this.ctx.body = {status: 403, message: "组织登录名已经存在！"};
     }
-    //this.ctx.body = {status: 200, data: "12312312312312312"};
   }
   async update() {
     this.ctx.body = {status: 200, data: "put"};

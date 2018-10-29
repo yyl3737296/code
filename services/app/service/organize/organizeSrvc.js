@@ -1,10 +1,5 @@
 const Service = require('egg').Service;
 class organizeSrvc extends Service {
-  async set(data) {
-    const { app } = this;
-    const result = await app.mongo.insertOne('Organize', {doc:data});
-    return result;
-  }
 
   async get(page, size, query) {
     const { app } = this;

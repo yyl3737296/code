@@ -21,7 +21,7 @@ class LoginController extends Controller {
     const { ctx, app } = this;
     const { userName, password } = ctx.request.body;
 
-    let userInfo = await ctx.service.loginSrvc.login(userName, password);
+    let userInfo = await ctx.service.user.userSrvc.getUser(userName, password);
     if (userInfo.length > 0) {
       let token = this.generateToken({_id: userInfo[0]._id}, 36000);
       ctx.body = {status: 200, token: token};
