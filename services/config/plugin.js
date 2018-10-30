@@ -10,9 +10,14 @@ exports.redis = {
   package: 'egg-redis',
 };
 
-exports.mongo = {
+exports.mysql = {
+  enable: true,
+  package: 'egg-mysql',
+};
+
+/*exports.mongo = {
   enable: true,
   package: 'egg-mongo-native',
-};
+};*/
 // had enabled by egg
 // exports.static = true;

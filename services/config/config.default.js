@@ -18,7 +18,22 @@ module.exports = appInfo => {
     }
   };
 
-  config.mongo = {
+  exports.mysql = {
+    // database configuration
+    client: {
+      host: 'localhost',
+      port: '3306',
+      user: 'root',
+      password: 'mima1234',
+      database: 'app',
+    },
+    // load into app, default true
+    app: true,
+    // load into agent, default false
+    agent: false,
+  };
+
+  /*config.mongo = {
     client: {
       host: 'localhost',
       port: '27017',
@@ -27,7 +42,7 @@ module.exports = appInfo => {
       password: '',
       options: {},
     },
-  };
+  };*/
 
   config.security = {
     csrf: {

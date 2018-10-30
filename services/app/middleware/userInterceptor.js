@@ -17,9 +17,9 @@ module.exports = (options, app) => {
         if (token && username){
             let result = verifyToken(token) //解密token
 
-            let {_id} = result //检查是否有用户_id
+            let {id} = result //检查是否有用户id
             //验证客户端token是否合法
-            if (_id) {
+            if (id) {
                 let redis_token = await app.redis.get(username) // 获取redis中的token
                 //验证是否为最新的token
                 if (token === redis_token) {

@@ -87,7 +87,7 @@ export default {
           if (valid) {
             let password = md5(Base64.encode(this.formInline.password));
             add({
-              organize: this.formInline.organize,
+              name: this.formInline.organize,
               user: this.formInline.user,
               password: password,
               description: this.formInline.description,

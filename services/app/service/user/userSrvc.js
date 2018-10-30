@@ -2,14 +2,15 @@ const Service = require('egg').Service;
 class UserSrvc extends Service {
 
   async getUser(username, password) {
-    const { app } = this;
-    const result = await app.mongo.find('User', {"query":{"username":username,"password":password}});
+    const result = await this.app.mysql.get('user', {
+      where: {"username":username,"password":password},
+      columns: ['id','username','name']
+    });
     return result;
   }
 
-  async getCount(query) {
-    const { app } = this;
-    const result = await app.mongo.find('User', {"query": query});
+  async getCount(username) {
+    const result = await this.app.mysql.get('user', {"username": username });
     return result;
   }
 

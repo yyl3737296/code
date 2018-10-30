@@ -5,10 +5,10 @@ class AuthController extends Controller {
   async index() {
     const { ctx } = this;
     const { page, size, key, value } = ctx.query;
-    let query = {};
+    let query = '';
     
     if ( value && key && key != '' && value != ' ') {
-      query[key] = new RegExp(value);
+      query = `where ${key} like \"%${value}%\"`;
     }
 
     let data = await ctx.service.organize.organizeSrvc.get(page, size, query);
@@ -20,21 +20,24 @@ class AuthController extends Controller {
   async create() {
     const { ctx } = this;
     const { user, password, organize, description } = ctx.request.body;
-    let query = {'username':user};
-    let total = await ctx.service.utilSrvc.getCount('User', query);
 
-    if (total == 0) {
-      let req = await ctx.service.utilSrvc.insertOne('Organize', {
-        organize: organize,
+    const total = await ctx.service.utilSrvc.get("user", {
+      username:user
+    });
+
+    if (!total) {
+      let req = await ctx.service.utilSrvc.insertOne('organize', {
+        id:'102559742',
+        name: organize,
         description: description
       });
 
-      await ctx.service.utilSrvc.insertOne('User', {
+      /* await ctx.service.utilSrvc.insertOne('User', {
         username: user,
         password: password,
         orgId: req.insertedId,
         role: 'super_admin_company'
-      });
+      }); */
 
       this.ctx.body = {status: 200};
     }
