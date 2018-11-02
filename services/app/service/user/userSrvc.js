@@ -2,10 +2,7 @@ const Service = require('egg').Service;
 class UserSrvc extends Service {
 
   async getUser(username, password) {
-    const result = await this.app.mysql.get('user', {
-      where: {"username":username,"password":password},
-      columns: ['id','username','name']
-    });
+    const result = await this.app.mysql.get('user', {"username":username,"password":password});
     return result;
   }
 

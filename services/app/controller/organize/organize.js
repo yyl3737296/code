@@ -19,25 +19,28 @@ class AuthController extends Controller {
   }
   async create() {
     const { ctx } = this;
-    const { user, password, organize, description } = ctx.request.body;
+    const { user, password, name, description } = ctx.request.body;
 
     const total = await ctx.service.utilSrvc.get("user", {
       username:user
     });
 
     if (!total) {
-      let req = await ctx.service.utilSrvc.insertOne('organize', {
-        id:'102559742',
-        name: organize,
+      let res = await ctx.service.utilSrvc.insertOne('organize', {
+        name: name,
         description: description
       });
 
-      /* await ctx.service.utilSrvc.insertOne('User', {
+      //// 判断插入成功
+      //const insertSuccess = res.affectedRows === 1;
+      console.log(JSON.stringify(res)+'++++++++++++++++++++++++++++++++');
+
+      await ctx.service.utilSrvc.insertOne('user', {
+        name: '超级管理员',
         username: user,
         password: password,
-        orgId: req.insertedId,
-        role: 'super_admin_company'
-      }); */
+        orgid: res.id
+      });
 
       this.ctx.body = {status: 200};
     }

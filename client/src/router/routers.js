@@ -56,6 +56,7 @@ export default [
     path: '/organize',
     name: 'organize',
     meta: {
+      access: ['super_admin'],
       hide: true
     },
     component: Main,
