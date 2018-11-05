@@ -5,10 +5,10 @@ class AuthController extends Controller {
   async index() {
     const { ctx } = this;
     const { page, size, key, value } = ctx.query;
-    let query = '';
+    let query = 'where isshow=0';
     
     if ( value && key && key != '' && value != ' ') {
-      query = `where ${key} like \"%${value}%\"`;
+      query = `where ${key} like \"%${value}%\" and isshow=0`;
     }
 
     let data = await ctx.service.organize.organizeSrvc.get(page, size, query);
@@ -28,7 +28,8 @@ class AuthController extends Controller {
     if (!total) {
       let res = await ctx.service.utilSrvc.insertOne('organize', {
         name: name,
-        description: description
+        description: description,
+        isshow: 0
       });
 
       //// 判断插入成功
@@ -52,7 +53,14 @@ class AuthController extends Controller {
     this.ctx.body = {status: 200, data: "put"};
   }
   async destroy() {
-    this.ctx.body = {status: 200, data: "destroy"};
+    const { ctx } = this;
+    const id = ctx.params.id;
+    await ctx.service.utilSrvc.update('organize', {
+      id: id,
+      isshow: 1
+    });
+    console.log(JSON.stringify(ctx.params.id)+'=================================');
+    this.ctx.body = {status: 200};
   }
 }
 

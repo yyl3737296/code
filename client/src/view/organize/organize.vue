@@ -3,10 +3,18 @@
     <OrganizeAdd ref="add" @refreshTable="refreshTable"></OrganizeAdd>
     <Tables ref="tables" stripe border searchable :url="url" :buttons="buttons" :columns="columns">
     </Tables>
+    <Modal
+        v-model="deleteModal"
+        title="提示"
+        @on-cancel="cancel"
+        @on-ok="ok">
+        <p>是否确定删除这条数据</p>
+    </Modal>
   </div>
 </template>
 
 <script>
+import { del } from '@/api/data';
 import Tables from '_c/tables'
 import OrganizeAdd from './organizeAdd'
 export default {
@@ -19,6 +27,8 @@ export default {
   },
   data () {
     return {
+      deleteId: null,
+      deleteModal: false,
       url: 'organize',
       buttons: [{
         name: '新增',
@@ -44,50 +54,61 @@ export default {
         title: 'Address',
         key: 'tel'
       },
-          {
-              title: ' ',
-              key: 'action',
-              width: 150,
-              align: 'center',
-              render: (h, params) => {
-                  return h('div', [
-                      h('Button', {
-                          props: {
-                              type: 'primary',
-                              size: 'small'
-                          },
-                          style: {
-                              marginRight: '5px'
-                          },
-                          on: {
-                              click: () => {
-                                  this.show(params.index)
-                              }
-                          }
-                      }, 'View'),
-                      h('Button', {
-                          props: {
-                              type: 'error',
-                              size: 'small'
-                          },
-                          on: {
-                              click: () => {
-                                  this.remove(params.index)
-                              }
-                          }
-                      }, 'Delete')
-                  ]);
-              }
-          }
+      {
+        title: ' ',
+        key: 'action',
+        width: 150,
+        align: 'center',
+        render: (h, params) => {
+            return h('div', [
+                h('Button', {
+                    props: {
+                        type: 'primary',
+                        size: 'small'
+                    },
+                    style: {
+                        marginRight: '5px'
+                    },
+                    on: {
+                        click: () => {
+                            this.show(params.index)
+                        }
+                    }
+                }, 'View'),
+                h('Icon', {
+                    props: {
+                        type: 'ios-trash',
+                        size: 24,
+                        color: '#ed4014'
+                    },
+                    style: {
+                        cursor: 'pointer'
+                    },
+                    on: {
+                        click: () => {
+                          this.deleteModal = true;
+                          this.deleteId = params.row.id;
+                        }
+                    }
+                })
+            ]);
+        }
+      }
       ]
     }
   },
   methods: {
-      show (index) {
-        this.$Modal.info({
-          title: 'User Info',
-          content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+      ok () {
+        del('organize/'+this.deleteId).then(res => {
+          if (res) {
+            this.deleteId = null;
+            this.refreshTable();
+            this.$Message.success('删除成功');
+          }
         })
+      },
+      cancel () {
+        this.deleteId = null;
       },
       remove (index) {
         this.data6.splice(index, 1);

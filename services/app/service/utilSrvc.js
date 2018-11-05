@@ -22,6 +22,11 @@ class utilSrvc extends Service {
     return result;
   }
 
+  async update(table, row) {
+    const result = await this.app.mysql.update(table, row);
+    return result;
+  }
+
   async get(table, query) {
     const { app } = this;
     const count = await this.app.mysql.get(table, query);

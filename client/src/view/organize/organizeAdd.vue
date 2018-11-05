@@ -24,7 +24,7 @@
   </Modal>
 </template>
 <script>
-import { add } from '@/api/organize';
+import { add } from '@/api/data';
 import md5 from 'js-md5';
 import { Base64 } from 'js-base64';
 
@@ -86,7 +86,7 @@ export default {
       this.$refs.formInline.validate((valid) => {
           if (valid) {
             let password = md5(Base64.encode(this.formInline.password));
-            add({
+            add('organize', {
               name: this.formInline.organize,
               user: this.formInline.user,
               password: password,
@@ -94,6 +94,7 @@ export default {
             }).then(res => {
               if (res) {
                 this.modal = false;
+                this.$Message.success('新增成功');
                 this.$emit('refreshTable');
               }
               else {
