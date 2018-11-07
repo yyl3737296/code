@@ -38,26 +38,30 @@ class httpRequest {
     instance.interceptors.response.use((res) => {
       let { data } = res
       
-      if (data.status !== 200) {
-        // 后端服务在个别情况下回报201，待确认
-        if (data.status === 401) {
-          Cookies.remove(TOKEN_KEY)
-          window.location.href = window.location.pathname + '#/login'
-          if (data.message) {
-            Message.error(data.message)
-          }
-          else {
-            Message.error('未登录，或登录失效，请登录')
-          }
-          
-        } else {
-          if (data.message) Message.error(data.message)
-        }
+      if (data.err_msg) {
+        Message.error(data.err_msg)
         return false
       }
+      
       return data
     }, (error) => {
-      Message.error('服务内部错误')
+      let res = error.response,
+          data = res.data;
+
+      if (res.status === 401) {
+        Cookies.remove(TOKEN_KEY)
+        window.location.href = window.location.pathname + '#/login'
+        if (data.message) {
+          Message.error(data.message)
+        }
+        else {
+          Message.error('未登录，或登录失效，请登录')
+        }
+      } else if (data.message) {
+        Message.error(data.message)
+      } else {
+        Message.error('服务内部错误')
+      }
       // 对响应错误做点什么
       return Promise.reject(error)
     })

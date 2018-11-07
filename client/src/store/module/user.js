@@ -72,7 +72,7 @@ export default {
             const data = res.data
             commit('setAvator', data.avator)
             commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
+            //commit('setUserId', data.user_id)
             commit('setAccess', data.access)
           }
           resolve(res)

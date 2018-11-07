@@ -3,18 +3,24 @@
     <wxc-button text="Open Popup"
                 @wxcButtonClicked="buttonClicked">
     </wxc-button>
-    <wxc-popup width="500"
-               pos="left"
-               :show="isShow"
-               @wxcPopupOverlayClicked="overlayClicked">
+    
+    <wxc-searchbar
+         placeholder="搜索目的地"
+         input-type="text"
+         dep-name="杭州出发"></wxc-searchbar>
+
+     <wxc-popup width="500"
+           pos="left"
+           :show="isShow"
+           @wxcPopupOverlayClicked="overlayClicked">
     </wxc-popup>
   </div>
 </template>
 
 <script>
-  import { WxcButton, WxcPopup } from 'weex-ui';
+  import { WxcButton, WxcPopup, WxcSearchbar } from 'weex-ui';
   module.exports = {
-    components: { WxcButton, WxcPopup },
+    components: { WxcButton, WxcPopup, WxcSearchbar },
     data: () => ({
       isShow: false
     }),

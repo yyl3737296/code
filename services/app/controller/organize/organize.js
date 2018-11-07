@@ -34,19 +34,19 @@ class AuthController extends Controller {
 
       //// 判断插入成功
       //const insertSuccess = res.affectedRows === 1;
-      console.log(JSON.stringify(res)+'++++++++++++++++++++++++++++++++');
+      //console.log(JSON.stringify(res)+'++++++++++++++++++++++++++++++++'+res.id);
 
       await ctx.service.utilSrvc.insertOne('user', {
         name: '超级管理员',
         username: user,
         password: password,
-        orgid: res.id
+        org_id: res.id
       });
 
-      this.ctx.body = {status: 200};
+      this.ctx.body = {};
     }
     else {
-      this.ctx.body = {status: 403, message: "组织登录名已经存在！"};
+      this.ctx.body = {err_msg:"组织登录名已经存在！"};
     }
   }
   async update() {

@@ -11,6 +11,16 @@ class UserSrvc extends Service {
     return result;
   }
 
+  async getRole(id) {
+    const result = await this.app.mysql.query(`SELECT * FROM role r WHERE (SELECT FIND_IN_SET(r.id, u.role_id) from user u where u.id="${id}")`);
+    return result;
+  }
+
+  async getInterface(ids) {
+    const result = await this.app.mysql.query(`SELECT name FROM interface WHERE id in (${ids})`);
+    return result;
+  }
+
 
 }
 module.exports = UserSrvc;
