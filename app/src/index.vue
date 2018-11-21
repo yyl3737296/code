@@ -1,19 +1,6 @@
 <template>
-  <div>
-    <wxc-button text="Open Popup"
-                @wxcButtonClicked="buttonClicked">
-    </wxc-button>
-    
-    <wxc-searchbar
-         placeholder="搜索目的地"
-         input-type="text"
-         dep-name="杭州出发"></wxc-searchbar>
-
-     <wxc-popup width="500"
-           pos="left"
-           :show="isShow"
-           @wxcPopupOverlayClicked="overlayClicked">
-    </wxc-popup>
+  <div id="app">
+    <router-view/>
   </div>
 </template>
 
@@ -34,3 +21,10 @@
     }
   };
 </script>
+
+<style>
+  #app {
+    width: 100%;
+    height: 100%;
+  }
+</style>

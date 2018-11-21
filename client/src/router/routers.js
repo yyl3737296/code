@@ -66,6 +66,7 @@ export default [
         name: 'organize_page',
         meta: {
           icon: 'ios-people',
+          access: ['super_admin'],
           title: '组织管理'
         },
         component: () => import('@/view/organize/organize.vue')

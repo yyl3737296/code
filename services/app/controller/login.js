@@ -75,11 +75,11 @@ class LoginController extends Controller {
     app.redis.set(id, JSON.stringify(inter_name));
     //console.log(JSON.stringify(inter_name)+'===============================');
 
-    ctx.body = {status: 200, data: {
+    ctx.body = {
       name: 'super_admin',
       access: access,
       avator: 'https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png'
-    }};
+    };
   }
 
   async logout() {

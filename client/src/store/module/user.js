@@ -67,15 +67,14 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(res => {
-          if (res) {
-            const data = res.data
+        getUserInfo(state.token).then(data => {
+          if (data) {
             commit('setAvator', data.avator)
             commit('setUserName', data.name)
             //commit('setUserId', data.user_id)
             commit('setAccess', data.access)
           }
-          resolve(res)
+          resolve(data)
         }).catch(err => {
           reject(err)
         })
