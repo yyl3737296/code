@@ -16,7 +16,7 @@
   export default {
     components: { WxcButton, WxcPopup, WxcSearchbar },
     mounted() {
-      alert(login());
+      login()
     }
   }
 </script>
