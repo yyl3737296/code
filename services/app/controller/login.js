@@ -49,7 +49,8 @@ class LoginController extends Controller {
       app.redis.set(userName, token);
     }
     else {
-      ctx.body = {status: 403, message: "用户名或密码错误！"};
+      ctx.status = 401;
+      ctx.body = {message: "用户名或密码错误！"};
     }
 
   }

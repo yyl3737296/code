@@ -5,11 +5,12 @@ class httpRequest {
   request (options) {
     return this.stream.fetch({
       headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Type': 'application/x-www-form-urlencoded',
         'X-URL-PATH': location.pathname
       },
-      body: '{username:"admin",password:"admin"}',
+      body: 'userName=admin&password=admin',
       method: 'post',
+      type: 'json',
       url: 'http://127.0.0.1:7001/login'
     })
   }
