@@ -16,7 +16,16 @@
   export default {
     components: { WxcButton, WxcPopup, WxcSearchbar },
     mounted() {
-      login()
+      login({
+        userName:'admin',
+        password:'db69fc039dcbd2962cb4d28f5891aae1'
+      }).then(
+        data => {
+          console.log(data);
+        },
+        err => {
+          console.log(err);
+      })
     }
   }
 </script>

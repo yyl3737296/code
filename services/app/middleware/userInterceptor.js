@@ -28,8 +28,7 @@ module.exports = (options, app) => {
             return;
           }
 
-          let inter_name = await app.redis.get(id),
-              success = false;
+          let inter_name = await app.redis.get(id);
               inter_name = JSON.parse(inter_name);
 
           for (let i = 0; i < inter_name.length; i++) {
